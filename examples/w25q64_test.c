@@ -2,13 +2,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 #include "w25q64.h"
 
-#define SPI_CHANNEL 4 // /dev/spidevX.0
-//#define SPI_CHANNEL 1 // /dev/spidevX.0
+#define SPI_SPEED 2000000
 
-#define SPI_PORT 1
-//#define SPI_PORT 1
+int parse_spidev(const char *dev, int *channel, int *port) {
+    if (strncmp(dev, "/dev/spidev", 11) != 0) return -1;
+
+    int ch = -1, pt = -1;
+    if (sscanf(dev, "/dev/spidev%d.%d", &ch, &pt) == 2) {
+        *channel = ch;
+        *port = pt;
+        return 0;
+    }
+    return -1;
+}
 
 void dump(uint8_t *dt, uint32_t n) {
   uint32_t sz;
@@ -52,21 +61,38 @@ void dump(uint8_t *dt, uint32_t n) {
   printf("|%02x \n\n",total);
 }
 
-void main() {
+int main(int argc, char *argv[]) {
+    const char *spi_dev = "/dev/spidev0.0";
+    int channel = 0, port = 0;
     uint8_t buf[256];    
     uint8_t wdata[16];   
     uint8_t i;
     uint16_t n;          
+    int opt;
 
-    // Start SPI channel 0 with 2MHz
-
-    //if (wiringPiSPISetup(SPI_CHANNEL, 2000000) < 0) {
-    if (wiringPiSPISetupMode(SPI_CHANNEL, SPI_PORT, 2000000, 0) < 0) {
-    	printf("SPISetup failed:\n");
+    while ((opt = getopt(argc, argv, "D:")) != -1) {
+        switch (opt) {
+            case 'D':
+                spi_dev = optarg;
+                break;
+            default:
+                fprintf(stderr, "Usage: %s [-D /dev/spidevX.Y]\n", argv[0]);
+                return 1;
+        }
     }
-    
+
+    if (parse_spidev(spi_dev, &channel, &port) != 0) {
+        fprintf(stderr, "Invalid SPI device format: %s\n", spi_dev);
+        return 1;
+    }
+
+    if (wiringPiSPISetupMode(channel, port, SPI_SPEED, 0) < 0) {
+        perror("SPI setup failed");
+        return 1;
+    }
+
     // Start Flush Memory
-    W25Q64_begin(SPI_CHANNEL);
+    W25Q64_begin(channel);
     
     // JEDEC ID Get
     W25Q64_readManufacturer(buf);
@@ -136,4 +162,5 @@ void main() {
     // Get fron Status Register2
     buf[0] = W25Q64_readStatusReg2();
     printf("Status Register-2: %x\n",buf[0]);
+    return 0;
 }

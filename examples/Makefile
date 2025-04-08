@@ -194,4 +194,12 @@ tags:	$(SRC)
 depend:
 	makedepend -Y $(SRC)
 
+.PHONY:	install-deb
+install-deb:	blink spidev_test w25q64_test
+	$Q echo "[Install examples]"
+	install -m 0755 -d              $(CURDIR)/../debian-template/wiringPi/usr/local/bin
+	install -m 0755 blink		$(CURDIR)/../debian-template/wiringPi/usr/local/bin/blink_all_gpio
+	install -m 0755 spidev_test	$(CURDIR)/../debian-template/wiringPi/usr/local/bin/spidev_test
+	install -m 0755 w25q64_test	$(CURDIR)/../debian-template/wiringPi/usr/local/bin/w25q64_test
+
 # DO NOT DELETE
