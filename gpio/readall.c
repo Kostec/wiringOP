@@ -2052,6 +2052,12 @@ void OrangePiReadAll(int model)
 			physNames =  physNames_ZERO;
 			alts = alts_common;
 			break;
+		case PI_MODEL_WUKONG:
+			printf (" +------+-----+----------+--------+---+  WuKong  +---+--------+----------+-----+------+\n");
+			physToWpi =  physToWpi_ZERO;
+			physNames =  physNames_ZERO;
+			alts = alts_common;
+			break;
 		case PI_MODEL_WIN:
 			printf (" +------+-----+----------+--------+---+  OPi Win +---+--------+----------+-----+------+\n");
 			physToWpi =  physToWpi_WIN;
@@ -2266,6 +2272,7 @@ void OrangePiReadAll(int model)
 		case PI_MODEL_ZERO_PLUS_2:
 		case PI_MODEL_3:
 		case PI_MODEL_ZERO:
+		case PI_MODEL_WUKONG:
 		case PI_MODEL_ZERO_3_PLUS:
 		case PI_MODEL_800:
 		case PI_MODEL_4_LTS:
@@ -2315,6 +2322,9 @@ void OrangePiReadAll(int model)
 			break;
 		case PI_MODEL_ZERO:
 			printf (" +------+-----+----------+--------+---+  OPi H2  +---+--------+----------+-----+------+\n");
+			break;
+		case PI_MODEL_WUKONG:
+			printf (" +------+-----+----------+--------+---+  WuKong  +---+--------+----------+-----+------+\n");
 			break;
 		case PI_MODEL_WIN:
 			printf (" +------+-----+----------+--------+---+  OPi Win +---+--------+----------+-----+------+\n");

@@ -821,6 +821,9 @@ extern int wiringPiDebug;
 
 #define PI_MODEL_RV2             100
 
+/* Allwinner H3 */
+#define PI_MODEL_WUKONG			110
+
 extern const char *piModelNames    [16] ;
 
 extern const char *piRevisionNames [16] ;
