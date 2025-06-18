@@ -812,6 +812,7 @@ extern int wiringPiDebug;
 
 /* Ascend 310B */
 #define PI_MODEL_AI_PRO          70
+#define PI_MODEL_KUNPENG_PRO     71
 
 /* JH7110 */
 #define PI_MODEL_RV              80

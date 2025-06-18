@@ -32,6 +32,7 @@ unsigned char getGpioNum(void)
 			return 21;
 			break;
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 			return 26;
 			break;
 		case PI_MODEL_WIN:
