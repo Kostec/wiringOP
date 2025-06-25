@@ -2788,7 +2788,7 @@ void piBoardId (int * model)
 	else if (strncmp(revision, "orangepi3plus.",           14) == 0) { *model = PI_MODEL_3_PLUS; }
 	else if (strncmp(revision, "orangepiaipro.",           14) == 0) { *model = PI_MODEL_AI_PRO; }
 	else if (strncmp(revision, "orangepiaipro-20t.",       18) == 0) { *model = PI_MODEL_AI_PRO; }
-	else if (strncmp(revision, "orangepikunpengpro.",      19) == 0) { *model = PI_MODEL_AI_PRO; }
+	else if (strncmp(revision, "orangepikunpengpro.",      19) == 0) { *model = PI_MODEL_KUNPENG_PRO; }
 	else if (strncmp(revision, "orangepirv.",              11) == 0) { *model = PI_MODEL_RV; }
 	else if (strncmp(revision, "orangepirv2.",             12) == 0) { *model = PI_MODEL_RV2; }
 	else if (strncmp(revision, "wukongpi.",             	9) == 0) { *model = PI_MODEL_WUKONG; }
@@ -3168,6 +3168,7 @@ void orangepi_pwm_set_tone(int pin,int freq)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (freq > 0 && freq <= 32000)
 			{
@@ -3408,6 +3409,7 @@ void orangepi_pwm_set_clk(int pin,int clk)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (pin != 33)
 			{
@@ -3607,6 +3609,7 @@ void orangepi_pwm_set_period(int pin, unsigned int period_cys)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (pin != 33)
 			{
@@ -3780,6 +3783,7 @@ void orangepi_pwm_set_act(int pin, int act_cys)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (pin != 33)
 			{
@@ -5156,6 +5160,7 @@ int wiringPiSetup (void)
 			ORANGEPI_PIN_MASK = ORANGEPI_PIN_MASK_3PLUS;
 			break;
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 			pinToGpio =  pinToGpio_AIPRO;
 			physToGpio = physToGpio_AIPRO;
 			ORANGEPI_PIN_MASK = ORANGEPI_PIN_MASK_AIPRO;
@@ -5432,6 +5437,7 @@ int wiringPiSetup (void)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			// IOMUX BASE
 			a310b_gpio_info_t.iomux_base_group0 = mmap(0, MAP_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, A310B_IOMUX_BASE_GROUP0 & ~MAP_MASK);
@@ -5673,6 +5679,7 @@ int wiringPiSetupSys (void)
 			physToGpio = physToGpio_R1_PLUS;
 			break;
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 			pinToGpio =  pinToGpio_AIPRO;
 			physToGpio = physToGpio_AIPRO;
 			break;
@@ -5862,6 +5869,7 @@ unsigned int readR(unsigned int addr)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			mmap_base = (addr & 0xfffff000);
 			mmap_seek = (addr & MAP_MASK);
@@ -6106,6 +6114,7 @@ void writeR(unsigned int val, unsigned int addr)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			mmap_base = (addr & 0xfffff000);
 			mmap_seek = (addr & MAP_MASK);
@@ -6387,6 +6396,7 @@ int orangepi_get_gpio_mode(int pin)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (ORANGEPI_PIN_MASK[bank][index] != -1) {
 				switch (bank) {
@@ -7553,6 +7563,7 @@ int orangepi_set_gpio_mode(int pin, int mode)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			if (ORANGEPI_PIN_MASK[bank][index] != -1) {
 				switch (bank) {
@@ -8199,6 +8210,7 @@ int orangepi_digitalWrite(int pin, int value)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			switch (bank) {
 				case 0:
@@ -8413,6 +8425,7 @@ int orangepi_digitalRead(int pin)
 			break;
 
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 
 			switch (bank) {
 				case 0:
