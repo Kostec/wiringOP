@@ -653,7 +653,7 @@ static pthread_mutex_t pinMutex ;
 // Debugging & Return codes
 
 int wiringPiDebug       = FALSE ;
-//int wiringPiDebug     = TRUE ;
+// int wiringPiDebug     = TRUE ;
 int wiringPiReturnCodes = FALSE ;
 
 // Use /dev/gpiomem ?
@@ -2701,8 +2701,8 @@ void piBoardId (int * model)
 			piGpioLayoutOops ("Unable to open /etc/orangepi-release or /etc/armbian-release.");
 
 	while (fgets (line, 40, cpuFd) != NULL)
-	if (strncmp (line, "BOARD=", 6) == 0)
-		break ;
+		if (strncmp (line, "BOARD=", 6) == 0)
+			break ;
 
 	fclose (cpuFd) ;
 
@@ -2791,6 +2791,7 @@ void piBoardId (int * model)
 	else if (strncmp(revision, "orangepikunpengpro.",      19) == 0) { *model = PI_MODEL_AI_PRO; }
 	else if (strncmp(revision, "orangepirv.",              11) == 0) { *model = PI_MODEL_RV; }
 	else if (strncmp(revision, "orangepirv2.",             12) == 0) { *model = PI_MODEL_RV2; }
+	else if (strncmp(revision, "wukongpi.",             	9) == 0) { *model = PI_MODEL_WUKONG; }
 
 	if (wiringPiDebug)
 		printf("piBoardId: model = %d\n", *model);
@@ -2998,7 +2999,7 @@ void sunxi_pwm_set_mode(int mode)
     val |= (SUNXI_PWM_ACT_STA);  //1<<8  ACT_HIGH
 
     if (wiringPiDebug)
-        printf(">>function%s,no:%d,mode? :0x%x\n", __func__, __LINE__, val);
+        printf(">>func:%s,no:%d,mode? :0x%x\n", __func__, __LINE__, val);
 
     writeR(val, SUNXI_PWM_CTRL_REG);
     delay(1);
@@ -3298,7 +3299,6 @@ void orangepi_pwm_set_clk(int pin,int clk)
 		case PI_MODEL_ZERO_2:
 		case PI_MODEL_ZERO_2_W:
 		case PI_MODEL_ZERO_3_PLUS:
-
 			if ((clk < 1) || (clk > 256)) {
 				fprintf (stderr, "gpio: clock must be between 1 and 256\n") ;
 				exit (1) ;
@@ -4220,7 +4220,10 @@ int digitalRead (int pin)
 	else 
 	{
 		if ((node = wiringPiFindNode (pin)) == NULL)
+		{
+			printf("[%s %d]Pin %d is invalid, please check it over!\n", __func__, __LINE__, pin);
 			return LOW ;
+		}
 		
 		return node->digitalRead (node, pin) ;
 	}
@@ -4898,6 +4901,7 @@ void set_soc_info(void)
 			sunxi_gpio_info_t.gpio_cfg_mask = 0xf;
 			break;
 		case PI_MODEL_ZERO:
+		case PI_MODEL_WUKONG:
 		case PI_MODEL_ZERO_PLUS_2:
 		case PI_MODEL_WIN:
 		case PI_MODEL_PRIME:
@@ -4922,6 +4926,7 @@ void set_soc_info(void)
 		case PI_MODEL_3:
 		case PI_MODEL_LTIE_2:
 		case PI_MODEL_ZERO:
+		case PI_MODEL_WUKONG:
 		case PI_MODEL_ZERO_PLUS_2:
 		case PI_MODEL_WIN:
 		case PI_MODEL_PRIME:
@@ -4986,12 +4991,13 @@ int wiringPiSetup (void)
 		wiringPiReturnCodes = TRUE ;
 
 	if (wiringPiDebug)
-	printf ("wiringPi: wiringPiSetup called\n") ;
+		printf ("wiringPi: wiringPiSetup called\n") ;
 
 	piBoardId (&OrangePiModel) ;
 
 	wiringPiMode = WPI_MODE_PINS ;
 
+	printf("wiringPiSetup: OrangePiModel = %d\n", OrangePiModel);
 	switch (OrangePiModel)
 	{
 		case PI_MODEL_3:
@@ -5164,6 +5170,11 @@ int wiringPiSetup (void)
 			physToGpio = physToGpio_RV2;
 			ORANGEPI_PIN_MASK = ORANGEPI_PIN_MASK_RV2;
 			break;
+		case PI_MODEL_WUKONG:
+			pinToGpio =  pinToGpio_ZERO;
+			physToGpio = physToGpio_ZERO;
+			ORANGEPI_PIN_MASK = ORANGEPI_PIN_MASK_ZERO;
+			break;
 		default:
 			printf ("Oops - unable to determine board type... model: %d\n", OrangePiModel);
 			break ;
@@ -5190,7 +5201,7 @@ int wiringPiSetup (void)
 	switch (OrangePiModel)
 	{
 		case PI_MODEL_3: case PI_MODEL_LTIE_2: case PI_MODEL_ZERO_2:
-		case PI_MODEL_ZERO: case PI_MODEL_ZERO_PLUS_2: case PI_MODEL_WIN:
+		case PI_MODEL_ZERO: case PI_MODEL_WUKONG: case PI_MODEL_ZERO_PLUS_2: case PI_MODEL_WIN:
 		case PI_MODEL_PRIME: case PI_MODEL_PC_2: case PI_MODEL_ZERO_PLUS:
 		case PI_MODEL_H3: case PI_MODEL_ZERO_2_W: case PI_MODEL_4A:
 		case PI_MODEL_ZERO_3_PLUS:
@@ -5601,6 +5612,7 @@ int wiringPiSetupSys (void)
 			physToGpio = physToGpio_LITE_2;
 			break;
 		case PI_MODEL_ZERO:
+		case PI_MODEL_WUKONG:
 			pinToGpio =  pinToGpio_LITE_2;
 			physToGpio = physToGpio_LITE_2;
 			break;
@@ -8473,6 +8485,9 @@ int orangepi_digitalRead(int pin)
 
 		return val;
 	}
+
+	if (wiringPiDebug)
+		printf("[%s %d]Pin %d is zero!\n", __func__, __LINE__, pin);
 
 	return 0;
 }
