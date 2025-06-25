@@ -2223,6 +2223,12 @@ void OrangePiReadAll(int model)
 			physNames =  physNames_AIPRO;
 			alts = alts_310b;
 			break;
+		case PI_MODEL_KUNPENG_PRO:
+			printf (" +------+-----+----------+--------+---+  KP PRO  +---+--------+----------+-----+------+\n");
+			physToWpi =  physToWpi_AIPRO;
+			physNames =  physNames_AIPRO;
+			alts = alts_310b;
+			break;
 		case PI_MODEL_RV:
 			printf (" +------+-----+----------+--------+---+   PIRV   +---+--------+----------+-----+------+\n");
 			physToWpi =  physToWpi_RV;
@@ -2262,6 +2268,7 @@ void OrangePiReadAll(int model)
 		case PI_MODEL_ZERO_2_W:
 		case PI_MODEL_3_PLUS:
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 		case PI_MODEL_RV:
 		case PI_MODEL_4A:
 			for (pin = 1 ; pin <= 40; pin += 2)
@@ -2403,6 +2410,10 @@ void OrangePiReadAll(int model)
 			break;
 		case PI_MODEL_AI_PRO:
 			printf (" +------+-----+----------+--------+---+  AI PRO  +---+--------+----------+-----+------+\n");
+			break;
+		case PI_MODEL_KUNPENG_PRO:
+			printf (" +------+-----+----------+--------+---+  KP PRO  +---+--------+----------+-----+------+\n");
+			break;
 		case PI_MODEL_RV:
 			printf (" +------+-----+----------+--------+---+   PIRV   +---+--------+----------+-----+------+\n");
 			break;
@@ -2472,6 +2483,7 @@ void doQmode (int argc, char *argv [])
 
 	switch (model) {
 		case PI_MODEL_AI_PRO:
+		case PI_MODEL_KUNPENG_PRO:
 			alts = alts_310b;
 			break;
 		default:
